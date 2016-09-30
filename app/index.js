@@ -1,5 +1,8 @@
 'use strict';
 
+// Social authentication Logic
+require('./auth')();
+
 // const router = require('express').Router();
 
 // router.get('/', (req, res, next) => {

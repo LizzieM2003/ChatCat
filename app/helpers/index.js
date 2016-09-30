@@ -43,7 +43,7 @@ let createNewUser = profile => {
 			profilePic: profile.photos[0].value || ''
 		});
 
-		new ChatUser.save(error => {
+		newChatUser.save(error => {
 			if (error) {
 				reject(error);
 			} else {

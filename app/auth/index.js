@@ -28,8 +28,8 @@ module.exports = () => {
 				} else {
 					// Create a new user and return
 					h.createNewUser(profile)
-						.then(newChatUser => done(nukk, newChatuser))
-						.catch(error => console.log('Error when creating new user'))
+						.then(newChatUser => done(null, newChatUser))
+						.catch(error => console.log('Error when creating new user'));
 				}
 			});
 	}
