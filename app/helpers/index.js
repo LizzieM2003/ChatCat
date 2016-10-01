@@ -2,6 +2,7 @@
 
 const router = require('express').Router();
 const db = require('../db');
+const crypto = require('crypto');
 
 // Iterate through the routes and mount them onto the router middleware
 let _registerRoutes = (routes, method) => {
@@ -75,10 +76,30 @@ let isAuthenticated = (req, res, next) => {
 	}
 }
 
+// Find a chatroom by a given name
+let findRoomByName = (allRooms, room) => {
+	let findRoom = allRooms.findIndex((element, index, array) => {
+		if (element.room.toLowerCase() === room.toLowerCase()) {
+			return true;
+		} else {
+			return false;
+		}
+	});
+	
+	return findRoom > -1 ? true : false;
+}
+
+// A function that gernerates a unique roomID
+let randomHex = () => {
+	return crypto.randomBytes(24).toString('hex');
+}
+
 module.exports = {
 	route,
 	findOne,
 	createNewUser,
 	findById,
-	isAuthenticated
+	isAuthenticated,
+	findRoomByName,
+	randomHex
 }
