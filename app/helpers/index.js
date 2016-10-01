@@ -94,6 +94,52 @@ let randomHex = () => {
 	return crypto.randomBytes(24).toString('hex');
 }
 
+let findRoomById = (allRooms, roomID) => {
+	return allRooms.find((element, index, array) => {
+		if (element.roomID === roomID) {
+			return true;
+		} else {
+			return false;
+		}
+	});
+}
+// Add a user to a room
+let addUserToRoom = (allRooms, data, socket) => {
+	// Get the room object
+	let getRoom = findRoomById(allRooms, data.roomID);
+	if (getRoom) {
+		// Get the active user's ID (ObjectID as used in session)
+		let userID = socket.request.session.passport.user;
+		// Check to see if this user already exists in the chatroom
+		let checkUser = getRoom.users.findIndex((element, index, array) => {
+			if (element.userID === userID) {
+				return true;
+			} else {
+				return false;
+			}
+		});
+
+		// If the user is already present in the room, remove him first
+		if (checkUser > -1) {
+			getRoom.users.splice(checkUser, 1);
+		}
+
+		// Push the user into the room's users array
+		getRoom.users.push({
+			socketID: socket.id,
+			userID,
+			user: data.user,
+			userPic: data.userPic
+		});
+
+		// Join the room channel
+		socket.join(data.roomID);
+
+		// Return the updated room object
+		return getRoom;
+	}
+}
+
 module.exports = {
 	route,
 	findOne,
@@ -101,5 +147,7 @@ module.exports = {
 	findById,
 	isAuthenticated,
 	findRoomByName,
-	randomHex
+	randomHex,
+	findRoomById,
+	addUserToRoom
 }
