@@ -140,6 +140,26 @@ let addUserToRoom = (allRooms, data, socket) => {
 	}
 }
 
+// Find and purge the user when a socket disconnects
+let removeUserFromRoom = (allRooms, socket) => {
+	for (let room of allRooms) {
+		// Find the user
+		let findUser = room.users.findIndex((element, index, array) => {
+			if (element.socketID === socket.id) {
+				return true;
+			} else {
+				return false;
+			}
+		});
+
+		if (findUser > -1) {
+			socket.leave(room.roomID);
+			room.users.splice(findUser, 1);
+			return room;
+		}
+	}
+}
+
 module.exports = {
 	route,
 	findOne,
@@ -149,5 +169,6 @@ module.exports = {
 	findRoomByName,
 	randomHex,
 	findRoomById,
-	addUserToRoom
+	addUserToRoom,
+	removeUserFromRoom
 }
